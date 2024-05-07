@@ -23,17 +23,14 @@ To write a program to convert the BNF rules into YACC form and to generate Abstr
 main() {
 int a, b, c;
 if (a < b) {
-a = a + b;
-}
+a = a + b;}
 while (a < b) {
-a = a + b;
-}
+a = a + b;}
 if (a <= b) {
 c = a - b;
 } else {
 c = a + b;
-}
-}
+}}
 ```
 ### exp7.l
 ```
@@ -73,25 +70,21 @@ return RELOP;}
 %{
 #include<string.h>
 #include<stdio.h>
-struct quad
-{
+struct quad{
 char op[5];
 char arg1[10];
 char arg2[10];
 char result[10];
 }QUAD[30];
-struct stack
-{
+struct stack{
 int items[100];
 int top;
 }stk;
 int Index=0,tIndex=0,StNo,Ind,tInd;
 extern int LineNo;
 %}
-%union
-{
-char var[10];
-}
+%union{
+char var[10];}
 %token <var> NUM VAR RELOP
 %token MAIN IF ELSE WHILE TYPE
 %type <var> EXPR ASSIGNMENT CONDITION IFST ELSEST WHILELOOP
@@ -122,8 +115,7 @@ strcpy(QUAD[Index].arg1,$3);
 strcpy(QUAD[Index].arg2,"");
 strcpy(QUAD[Index].result,$1);
 strcpy($$,QUAD[Index++].result);
-}
-;
+};
 EXPR: EXPR '+' EXPR {AddQuadruple("+",$1,$3,$$);}
 | EXPR '-' EXPR {AddQuadruple("-",$1,$3,$$);}
 | EXPR '*' EXPR {AddQuadruple("*",$1,$3,$$);}
@@ -137,8 +129,7 @@ CONDST: IFST{
 Ind=pop();
 sprintf(QUAD[Ind].result,"%d",Index);
 Ind=pop();
-sprintf(QUAD[Ind].result,"%d",Index);
-}
+sprintf(QUAD[Ind].result,"%d",Index);}
 | IFST ELSEST
 ;
 IFST: IF '(' CONDITION ')' {
@@ -147,27 +138,22 @@ strcpy(QUAD[Index].arg1,$3);
 strcpy(QUAD[Index].arg2,"FALSE");
 strcpy(QUAD[Index].result,"-1");
 push(Index);
-Index++;
-}
+Index++;}
 BLOCK { strcpy(QUAD[Index].op,"GOTO"); strcpy(QUAD[Index].arg1,"");
 strcpy(QUAD[Index].arg2,"");
 strcpy(QUAD[Index].result,"-1");
 push(Index);
-Index++;
-};
+Index++;};
 ELSEST: ELSE{
 tInd=pop();
 Ind=pop();
 push(tInd);
-sprintf(QUAD[Ind].result,"%d",Index);
-}
+sprintf(QUAD[Ind].result,"%d",Index);}
 BLOCK{
 Ind=pop();
-sprintf(QUAD[Ind].result,"%d",Index);
-};
+sprintf(QUAD[Ind].result,"%d",Index);};
 CONDITION: VAR RELOP VAR {AddQuadruple($2,$1,$3,$$);
-StNo=Index-1;
-}
+StNo=Index-1;}
 | VAR
 | NUM
 ;
@@ -175,42 +161,32 @@ WHILEST: WHILELOOP{
 Ind=pop();
 sprintf(QUAD[Ind].result,"%d",StNo);
 Ind=pop();
-sprintf(QUAD[Ind].result,"%d",Index);
-}
-;
+sprintf(QUAD[Ind].result,"%d",Index);};
 WHILELOOP: WHILE'('CONDITION ')' {
 strcpy(QUAD[Index].op,"==");
 strcpy(QUAD[Index].arg1,$3);
 strcpy(QUAD[Index].arg2,"FALSE");
 strcpy(QUAD[Index].result,"-1");
 push(Index);
-Index++;
-}
+Index++;}
 BLOCK {
 strcpy(QUAD[Index].op,"GOTO");
 strcpy(QUAD[Index].arg1,"");
 strcpy(QUAD[Index].arg2,"");
 strcpy(QUAD[Index].result,"-1");
 push(Index);
-Index++;
-}
-;
+Index++;};
 %%
 extern FILE *yyin;
-int main(int argc,char *argv[])
-{
+int main(int argc,char *argv[]){
 FILE *fp;
 int i;
-if(argc>1)
-{
+if(argc>1){
 fp=fopen(argv[1],"r");
-if(!fp)
-{
+if(!fp){
 printf("\n File not found");
-exit(0);
-}
-yyin=fp;
-}
+exit(0);}
+yyin=fp;}
 yyparse();
 printf("\n\n\t\t ----------------------------""\n\t\t Pos Operator \tArg1 \tArg2 \tResult"
 "\n\t\t--------------------");
@@ -222,41 +198,27 @@ printf("\n\t\t -----------------------");
 printf("\n\n"); return 0; }
 void push(int data)
 { stk.top++;
-if(stk.top==100)
-{
+if(stk.top==100){
 printf("\n Stack overflow\n");
-exit(0);
-}
-stk.items[stk.top]=data;
-}
-int pop()
-{
+exit(0);}
+stk.items[stk.top]=data;}
+int pop(){
 int data;
-if(stk.top==-1)
-{
+if(stk.top==-1){
 printf("\n Stack underflow\n");
-exit(0);
-}
+exit(0);}
 data=stk.items[stk.top--];
-return data;
-}
-void AddQuadruple(char op[5],char arg1[10],char arg2[10],char result[10])
-{
+return data;}
+void AddQuadruple(char op[5],char arg1[10],char arg2[10],char result[10]){
 strcpy(QUAD[Index].op,op);
 strcpy(QUAD[Index].arg1,arg1);
 strcpy(QUAD[Index].arg2,arg2);
 sprintf(QUAD[Index].result,"t%d",tIndex++);
-strcpy(result,QUAD[Index++].result);
-}
-yyerror()
-{
-printf("\n Error on line no:%d",LineNo);
-}
+strcpy(result,QUAD[Index++].result);}
+yyerror(){
+printf("\n Error on line no:%d",LineNo);}
 ```
 # Output
 ![image](https://github.com/GnanendranN/Ex-7-GENERATION-OF-ABSTRACT-SYNTAX-TREE/assets/138955207/a41c3d25-8492-4bcd-993a-0c443d13d309)
-
 # Result
 Conversion of the BNF rules into YACC form and to generate Abstract Syntax Tree is implemented.
-
-
